@@ -46,7 +46,7 @@ frontend/   # React frontend (Vite, src, components, pages, etc.)
 
    ```bash
    cd backend
-   pip install django djangorestframework
+   pip install -r requirements.txt  # (installs Django, djangorestframework, django-cors-headers)
    ```
 
    _(If you use a virtual environment, activate it first)_
