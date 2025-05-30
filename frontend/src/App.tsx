@@ -3,7 +3,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
 import ProtectedRoute from "./components/ProtectedRoute";
-import BlogDetails from "./components/BlogDetails";
+import BlogDetails from "./pages/BlogDetails";
 import CreateBlog from "./pages/CreateBlog";
 import EditBlog from "./pages/EditBlog";
 import Profile from "./pages/Profile";

@@ -1,11 +1,13 @@
-import { useEditor, EditorContent } from '@tiptap/react'
-import StarterKit from '@tiptap/starter-kit'
-import Underline from '@tiptap/extension-underline'
-import Link from '@tiptap/extension-link'
-import TextAlign from '@tiptap/extension-text-align'
-import Image from '@tiptap/extension-image'
+"use client"
 
-type EditorProps = {
+import { useEditor, EditorContent } from "@tiptap/react"
+import StarterKit from "@tiptap/starter-kit"
+import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
+import { Bold, Italic, List, ListOrdered, Quote, Undo, Redo, Heading1, Heading2, Heading3 } from "lucide-react"
+import "../editor-styles.css"
+
+interface EditorProps {
   content: string
   setContent: (content: string) => void
 }
@@ -14,92 +16,131 @@ export default function Editor({ content, setContent }: EditorProps) {
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
-        bulletList: { keepMarks: true, keepAttributes: false },
-        orderedList: { keepMarks: true, keepAttributes: false },
+        heading: {
+          levels: [1, 2, 3, 4, 5, 6],
+        },
       }),
-      Underline,
-      Link.configure({ openOnClick: false }),
-      TextAlign.configure({ types: ['heading', 'paragraph'] }),
-      Image,
     ],
     content,
     onUpdate: ({ editor }) => {
       setContent(editor.getHTML())
     },
+    editorProps: {
+      attributes: {
+        class: "prose prose-sm sm:prose lg:prose-lg xl:prose-2xl mx-auto focus:outline-none",
+      },
+    },
   })
 
-  if (!editor) return null
-
-  const btnClass = (active: boolean) =>
-    `px-2 py-1 rounded border text-sm select-none ${
-      active ? 'bg-blue-600 text-white' : 'bg-white text-gray-800 hover:bg-gray-100'
-    }`
+  if (!editor) {
+    return null
+  }
 
   return (
-    <div>
+    <div className="space-y-4">
       {/* Toolbar */}
-      <div className="mb-3 flex flex-wrap gap-2">
-        <button onClick={() => editor.chain().focus().toggleBold().run()} className={btnClass(editor.isActive('bold'))}>
-          <b>B</b>
-        </button>
-        <button onClick={() => editor.chain().focus().toggleItalic().run()} className={btnClass(editor.isActive('italic'))}>
-          <i>I</i>
-        </button>
-        <button onClick={() => editor.chain().focus().toggleUnderline().run()} className={btnClass(editor.isActive('underline'))}>
-          <u>U</u>
-        </button>
-        <button onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()} className={btnClass(editor.isActive('heading', { level: 1 }))}>
-          H1
-        </button>
-        <button onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()} className={btnClass(editor.isActive('heading', { level: 2 }))}>
-          H2
-        </button>
-        <button onClick={() => editor.chain().focus().toggleBulletList().run()} className={btnClass(editor.isActive('bulletList'))}>
-          • List
-        </button>
-        <button onClick={() => editor.chain().focus().toggleOrderedList().run()} className={btnClass(editor.isActive('orderedList'))}>
-          1. List
-        </button>
-        <button onClick={() => editor.chain().focus().toggleBlockquote().run()} className={btnClass(editor.isActive('blockquote'))}>
-          “Quote”
-        </button>
-        <button onClick={() => editor.chain().focus().toggleCode().run()} className={btnClass(editor.isActive('code'))}>
-          {'</>'}
-        </button>
-        <button
-          onClick={() => {
-            const url = window.prompt('Enter URL')
-            if (url) editor.chain().focus().setLink({ href: url }).run()
-          }}
-          className={btnClass(editor.isActive('link'))}
-        >
-          🔗 Link
-        </button>
-        <button onClick={() => editor.chain().focus().unsetLink().run()} className={btnClass(false)}>
-          ❌ Unlink
-        </button>
-        <button onClick={() => editor.chain().focus().undo().run()} className={btnClass(false)}>
-          ⎌ Undo
-        </button>
-        <button onClick={() => editor.chain().focus().redo().run()} className={btnClass(false)}>
-          ↻ Redo
-        </button>
-        <button
-          onClick={() => {
-            const url = window.prompt('Enter image URL')
-            if (url) editor.chain().focus().setImage({ src: url }).run()
-          }}
-          className={btnClass(false)}
-        >
-          🖼️ Image
-        </button>
-      </div>
+      <Card className="p-3 border-border/50">
+        <div className="flex flex-wrap gap-2">
+          <div className="flex gap-1 border-r border-border/50 pr-2">
+            <Button
+              variant={editor.isActive("heading", { level: 1 }) ? "default" : "ghost"}
+              size="sm"
+              onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+              className="h-8 w-8 p-0"
+            >
+              <Heading1 className="h-4 w-4" />
+            </Button>
+            <Button
+              variant={editor.isActive("heading", { level: 2 }) ? "default" : "ghost"}
+              size="sm"
+              onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+              className="h-8 w-8 p-0"
+            >
+              <Heading2 className="h-4 w-4" />
+            </Button>
+            <Button
+              variant={editor.isActive("heading", { level: 3 }) ? "default" : "ghost"}
+              size="sm"
+              onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
+              className="h-8 w-8 p-0"
+            >
+              <Heading3 className="h-4 w-4" />
+            </Button>
+          </div>
+
+          <div className="flex gap-1 border-r border-border/50 pr-2">
+            <Button
+              variant={editor.isActive("bold") ? "default" : "ghost"}
+              size="sm"
+              onClick={() => editor.chain().focus().toggleBold().run()}
+              className="h-8 w-8 p-0"
+            >
+              <Bold className="h-4 w-4" />
+            </Button>
+            <Button
+              variant={editor.isActive("italic") ? "default" : "ghost"}
+              size="sm"
+              onClick={() => editor.chain().focus().toggleItalic().run()}
+              className="h-8 w-8 p-0"
+            >
+              <Italic className="h-4 w-4" />
+            </Button>
+          </div>
+
+          <div className="flex gap-1 border-r border-border/50 pr-2">
+            <Button
+              variant={editor.isActive("bulletList") ? "default" : "ghost"}
+              size="sm"
+              onClick={() => editor.chain().focus().toggleBulletList().run()}
+              className="h-8 w-8 p-0"
+            >
+              <List className="h-4 w-4" />
+            </Button>
+            <Button
+              variant={editor.isActive("orderedList") ? "default" : "ghost"}
+              size="sm"
+              onClick={() => editor.chain().focus().toggleOrderedList().run()}
+              className="h-8 w-8 p-0"
+            >
+              <ListOrdered className="h-4 w-4" />
+            </Button>
+            <Button
+              variant={editor.isActive("blockquote") ? "default" : "ghost"}
+              size="sm"
+              onClick={() => editor.chain().focus().toggleBlockquote().run()}
+              className="h-8 w-8 p-0"
+            >
+              <Quote className="h-4 w-4" />
+            </Button>
+          </div>
+
+          <div className="flex gap-1">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => editor.chain().focus().undo().run()}
+              disabled={!editor.can().undo()}
+              className="h-8 w-8 p-0"
+            >
+              <Undo className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => editor.chain().focus().redo().run()}
+              disabled={!editor.can().redo()}
+              className="h-8 w-8 p-0"
+            >
+              <Redo className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      </Card>
 
       {/* Editor Content */}
-      <EditorContent
-        editor={editor}
-        className="border rounded p-4 min-h-[150px] prose max-w-full focus:outline-none"
-      />
+      <div className="border border-border/50 rounded-lg overflow-hidden">
+        <EditorContent editor={editor} />
+      </div>
     </div>
   )
 }
