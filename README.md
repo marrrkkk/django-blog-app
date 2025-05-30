@@ -107,8 +107,6 @@ frontend/   # React frontend (Vite, src, components, pages, etc.)
 
 ## Development Notes
 
-- See `todo.txt` for pending features (e.g., highlight already liked blogs).
+- See `todo.txt` for pending features and active bugs
 - Frontend uses Vite aliases (e.g., `@/` for `src/`).
 - Tailwind CSS and ShadCN for styling and components.
-
----
